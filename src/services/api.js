@@ -1,4 +1,13 @@
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const getApiBaseUrl = () => {
+  if (process.env.REACT_APP_API_URL) {
+    return process.env.REACT_APP_API_URL;
+  }
+  // Fallback to dynamic host matching the frontend host, but on port 5000
+  const hostname = window.location.hostname;
+  return `http://${hostname}:5000/api`;
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 // Data collection service
 export const dataService = {

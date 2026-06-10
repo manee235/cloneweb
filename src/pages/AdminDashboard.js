@@ -121,12 +121,30 @@ const AdminDashboard = ({ admin, onLogout }) => {
     try {
       if (activeTab === 'overview') {
         const analytics = await adminService.getAnalytics();
+        if (analytics && analytics.error) {
+          if (analytics.error.includes('token') || analytics.error.includes('Unauthorized') || analytics.error.includes('Invalid')) {
+            handleLogout();
+            return;
+          }
+        }
         setAnalytics(analytics);
       } else if (activeTab === 'visitors') {
         const data = await adminService.getVisitorData(currentPage, 20);
+        if (data && data.error) {
+          if (data.error.includes('token') || data.error.includes('Unauthorized') || data.error.includes('Invalid')) {
+            handleLogout();
+            return;
+          }
+        }
         setVisitorData(data);
       } else if (activeTab === 'logs') {
         const logs = await adminService.getAuditLogs(currentPage, 50);
+        if (logs && logs.error) {
+          if (logs.error.includes('token') || logs.error.includes('Unauthorized') || logs.error.includes('Invalid')) {
+            handleLogout();
+            return;
+          }
+        }
         setAuditLogs(logs);
       }
     } catch (error) {
@@ -535,10 +553,10 @@ const AdminDashboard = ({ admin, onLogout }) => {
                   >
                     ← Previous
                   </button>
-                  <span>Page {currentPage} of {visitorData.pagination.pages}</span>
+                  <span>Page {currentPage} of {visitorData?.pagination?.pages || 1}</span>
                   <button
-                    onClick={() => setCurrentPage(Math.min(visitorData.pagination.pages, currentPage + 1))}
-                    disabled={currentPage === visitorData.pagination.pages}
+                    onClick={() => setCurrentPage(Math.min(visitorData?.pagination?.pages || 1, currentPage + 1))}
+                    disabled={currentPage === (visitorData?.pagination?.pages || 1)}
                   >
                     Next →
                   </button>
@@ -585,10 +603,10 @@ const AdminDashboard = ({ admin, onLogout }) => {
                   >
                     ← Previous
                   </button>
-                  <span>Page {currentPage} of {auditLogs.pagination.pages}</span>
+                  <span>Page {currentPage} of {auditLogs?.pagination?.pages || 1}</span>
                   <button
-                    onClick={() => setCurrentPage(Math.min(auditLogs.pagination.pages, currentPage + 1))}
-                    disabled={currentPage === auditLogs.pagination.pages}
+                    onClick={() => setCurrentPage(Math.min(auditLogs?.pagination?.pages || 1, currentPage + 1))}
+                    disabled={currentPage === (auditLogs?.pagination?.pages || 1)}
                   >
                     Next →
                   </button>
