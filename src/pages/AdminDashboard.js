@@ -12,10 +12,109 @@ const AdminDashboard = ({ admin, onLogout }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [expandedVisitor, setExpandedVisitor] = useState(null);
+  const [resolvedAddresses, setResolvedAddresses] = useState({});
+  const [resolvingIds, setResolvingIds] = useState({});
 
   useEffect(() => {
     loadDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeTab, currentPage]);
+
+  const resolveAddress = async (id, lat, lon) => {
+    if (resolvedAddresses[id] || resolvingIds[id]) return;
+    
+    setResolvingIds(prev => ({ ...prev, [id]: true }));
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=18&addressdetails=1`,
+        {
+          headers: {
+            'Accept-Language': 'en',
+            'User-Agent': 'CampaignAdminDashboard/1.0'
+          }
+        }
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setResolvedAddresses(prev => ({
+          ...prev,
+          [id]: data.display_name || `${lat}, ${lon}`
+        }));
+      } else {
+        setResolvedAddresses(prev => ({
+          ...prev,
+          [id]: `${lat}, ${lon}`
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching address:', err);
+      setResolvedAddresses(prev => ({
+        ...prev,
+        [id]: `${lat}, ${lon}`
+      }));
+    } finally {
+      setResolvingIds(prev => ({ ...prev, [id]: false }));
+    }
+  };
+
+  const resolveIpLocation = async (id, ip) => {
+    if (resolvedAddresses[id] || resolvingIds[id] || !ip) return;
+    
+    if (ip === '::1' || ip === '127.0.0.1' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+      setResolvedAddresses(prev => ({
+        ...prev,
+        [id]: 'Localhost / Private Network'
+      }));
+      return;
+    }
+
+    setResolvingIds(prev => ({ ...prev, [id]: true }));
+    try {
+      const response = await fetch(`https://ipapi.co/${ip}/json/`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.city) {
+          const locStr = `Approx. Location (IP): ${data.city}, ${data.region}, ${data.country_name} (${data.org || 'Unknown ISP'})`;
+          setResolvedAddresses(prev => ({
+            ...prev,
+            [id]: locStr
+          }));
+        } else {
+          setResolvedAddresses(prev => ({
+            ...prev,
+            [id]: 'IP Location details unavailable'
+          }));
+        }
+      } else {
+        setResolvedAddresses(prev => ({
+          ...prev,
+          [id]: 'Failed to resolve IP location'
+        }));
+      }
+    } catch (err) {
+      console.error('Error fetching IP location:', err);
+      setResolvedAddresses(prev => ({
+        ...prev,
+        [id]: 'Error resolving IP location'
+      }));
+    } finally {
+      setResolvingIds(prev => ({ ...prev, [id]: false }));
+    }
+  };
+
+  useEffect(() => {
+    if (expandedVisitor) {
+      const visitor = visitorData?.data?.find(v => v.id === expandedVisitor);
+      if (visitor) {
+        if (visitor.latitude && visitor.longitude) {
+          resolveAddress(visitor.id, visitor.latitude, visitor.longitude);
+        } else if (visitor.ip_address) {
+          resolveIpLocation(visitor.id, visitor.ip_address);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expandedVisitor, visitorData]);
 
   const loadDashboardData = async () => {
     setLoading(true);
@@ -245,8 +344,29 @@ const AdminDashboard = ({ admin, onLogout }) => {
                           <td>{visitor.ip_address}</td>
                           <td>{visitor.device_type}</td>
                           <td>{visitor.browser}</td>
-                          <td>{visitor.privacy_accepted ? '✅' : '❌'}</td>
-                          <td>{visitor.location_granted ? '✅' : '❌'}</td>
+                          <td>{visitor.privacy_accepted ? '✅ Accepted' : '❌ Declined'}</td>
+                          <td>
+                            {visitor.location_granted ? (
+                              <a 
+                                href={`https://www.google.com/maps?q=${visitor.latitude},${visitor.longitude}`} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                title="Click to view exact location on Google Maps"
+                                style={{ 
+                                  textDecoration: 'none', 
+                                  color: '#e67e22', 
+                                  fontWeight: 'bold',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '4px'
+                                }}
+                              >
+                                📍 Google Maps
+                              </a>
+                            ) : (
+                              <span style={{ color: '#95a5a6' }}>❌ Denied</span>
+                            )}
+                          </td>
                           <td>{formatDate(visitor.timestamp)}</td>
                           <td>
                             <button
@@ -291,22 +411,6 @@ const AdminDashboard = ({ admin, onLogout }) => {
                               <value>{v.browser}</value>
                             </div>
                             <div className="detail-item">
-                              <label>User Agent:</label>
-                              <value className="user-agent">{v.user_agent}</value>
-                            </div>
-                            {v.latitude && (
-                              <>
-                                <div className="detail-item">
-                                  <label>Latitude:</label>
-                                  <value>{v.latitude.toFixed(4)}</value>
-                                </div>
-                                <div className="detail-item">
-                                  <label>Longitude:</label>
-                                  <value>{v.longitude.toFixed(4)}</value>
-                                </div>
-                              </>
-                            )}
-                            <div className="detail-item">
                               <label>Privacy Accepted:</label>
                               <value>{v.privacy_accepted ? '✅ Yes' : '❌ No'}</value>
                             </div>
@@ -314,6 +418,22 @@ const AdminDashboard = ({ admin, onLogout }) => {
                               <label>Location Granted:</label>
                               <value>{v.location_granted ? '✅ Yes' : '❌ No'}</value>
                             </div>
+                            <div className="detail-item">
+                              <label>Visit Time:</label>
+                              <value>{formatDate(v.timestamp)}</value>
+                            </div>
+
+                            {(v.latitude || resolvedAddresses[v.id]) && (
+                              <div className="detail-item full-width-location" style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
+                                <label style={{ color: '#27ae60', fontWeight: 'bold' }}>
+                                  {v.latitude ? '📍 Resolved Physical Address (GPS):' : '🌐 Approximate Location (IP Geolocation):'}
+                                </label>
+                                <value style={{ fontSize: '15px', fontWeight: '600', color: '#2c3e50', background: '#eafaf1', padding: '8px 12px', borderRadius: '4px', borderLeft: '3px solid #27ae60', display: 'block' }}>
+                                  {resolvingIds[v.id] ? 'Resolving details...' : (resolvedAddresses[v.id] || 'Loading location...')}
+                                </value>
+                              </div>
+                            )}
+                            
                             {v.latitude && (
                               <>
                                 <div className="detail-item">
@@ -324,17 +444,47 @@ const AdminDashboard = ({ admin, onLogout }) => {
                                   <label>📍 Longitude:</label>
                                   <value>{v.longitude.toFixed(6)}</value>
                                 </div>
-                                {v.location_accuracy && (
-                                  <div className="detail-item">
-                                    <label>📍 Accuracy:</label>
-                                    <value>{v.location_accuracy.toFixed(2)}m</value>
+                                <div className="detail-item">
+                                  <label>📍 Accuracy:</label>
+                                  <value>{v.location_accuracy ? `${v.location_accuracy.toFixed(2)} meters` : 'N/A'}</value>
+                                </div>
+
+                                <div className="detail-item full-width-map" style={{ gridColumn: '1 / -1', marginTop: '15px' }}>
+                                  <label style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>🗺️ Interactive Location Map:</label>
+                                  <div style={{ borderRadius: '8px', overflow: 'hidden', border: '1px solid #ddd', marginTop: '5px' }}>
+                                    <iframe
+                                      title={`Map for ${v.session_id}`}
+                                      width="100%"
+                                      height="320"
+                                      style={{ border: 0 }}
+                                      src={`https://maps.google.com/maps?q=${v.latitude},${v.longitude}&z=16&output=embed`}
+                                      allowFullScreen
+                                      loading="lazy"
+                                    ></iframe>
                                   </div>
-                                )}
+                                  <div style={{ marginTop: '8px' }}>
+                                    <a
+                                      href={`https://www.google.com/maps?q=${v.latitude},${v.longitude}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="btn-view"
+                                      style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', textDecoration: 'none', padding: '8px 16px', fontSize: '13px' }}
+                                    >
+                                      🔗 Open in Google Maps
+                                    </a>
+                                  </div>
+                                </div>
                               </>
                             )}
+
+                            <div className="detail-item full-width-agent" style={{ gridColumn: '1 / -1', marginTop: '10px' }}>
+                              <label>User Agent:</label>
+                              <value className="user-agent">{v.user_agent}</value>
+                            </div>
+
                             <div className="detail-item">
                               <label>🖥️ Screen Resolution:</label>
-                              <value>{v.screen_resolution}</value>
+                              <value>{v.screen_resolution || 'N/A'}</value>
                             </div>
                             {v.screen_color_depth && (
                               <div className="detail-item">
@@ -369,10 +519,6 @@ const AdminDashboard = ({ admin, onLogout }) => {
                             <div className="detail-item">
                               <label>🍪 Cookies:</label>
                               <value>{v.cookies_enabled ? '✅ Enabled' : '❌ Disabled'}</value>
-                            </div>
-                            <div className="detail-item">
-                              <label>Visit Time:</label>
-                              <value>{formatDate(v.timestamp)}</value>
                             </div>
                           </div>
                         </div>

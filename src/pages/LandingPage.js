@@ -10,8 +10,6 @@ const LandingPage = () => {
   const [showPrivacy, setShowPrivacy] = React.useState(true);
   const [showLocation, setShowLocation] = React.useState(false);
   const [privacyAccepted, setPrivacyAccepted] = React.useState(false);
-  const [locationData, setLocationData] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
 
   const handlePrivacyAccept = () => {
     setPrivacyAccepted(true);
@@ -27,7 +25,6 @@ const LandingPage = () => {
   };
 
   const handleLocationAllow = async (location) => {
-    setLocationData(location);
     setShowLocation(false);
     collectData(privacyAccepted, location);
   };
@@ -39,7 +36,6 @@ const LandingPage = () => {
 
   const collectData = async (privacyAccepted, location) => {
     try {
-      setLoading(true);
       const sessionId = getOrCreateSessionId();
       
       // Get device details
@@ -94,8 +90,6 @@ const LandingPage = () => {
       console.log('🖥️ Screen:', screenResolution);
     } catch (error) {
       console.error('❌ Error collecting data:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
