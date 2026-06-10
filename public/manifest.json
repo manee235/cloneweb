@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "🔥 Daraz Promo",
+  "name": "Daraz Festive Offers & Promotions",
+  "description": "Exclusive festive offers and special promotions with location-based deals",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,16 +11,47 @@
     {
       "src": "logo192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
       "src": "logo512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "scope": "/",
+  "theme_color": "#ff6b35",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "categories": ["shopping", "productivity"],
+  "screenshots": [
+    {
+      "src": "logo512.png",
+      "sizes": "512x512",
+      "form_factor": "wide"
+    },
+    {
+      "src": "logo192.png",
+      "sizes": "192x192",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "View Offers",
+      "short_name": "Offers",
+      "description": "View exclusive festive offers",
+      "url": "/",
+      "icons": [
+        {
+          "src": "logo192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
 }

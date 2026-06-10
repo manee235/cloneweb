@@ -1,0 +1,548 @@
+.landing-page {
+  min-height: 100vh;
+  background: #f5f5f5;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  background: linear-gradient(135deg, #dc3545 0%, #ff6b6b 50%, #ff8787 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  overflow: hidden;
+  color: white;
+}
+
+.hero-background {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.decoration {
+  position: absolute;
+  opacity: 0.1;
+  animation: float 6s ease-in-out infinite;
+}
+
+.decoration-1 {
+  width: 300px;
+  height: 300px;
+  background: white;
+  border-radius: 50%;
+  top: -100px;
+  left: -100px;
+  animation-delay: 0s;
+}
+
+.decoration-2 {
+  width: 200px;
+  height: 200px;
+  background: white;
+  border-radius: 50%;
+  bottom: -50px;
+  right: -50px;
+  animation-delay: 2s;
+}
+
+.decoration-3 {
+  width: 150px;
+  height: 150px;
+  background: white;
+  border-radius: 50%;
+  top: 50%;
+  right: 10%;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(30px);
+  }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 800px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-banner {
+  margin-bottom: 30px;
+}
+
+.hero-title {
+  font-size: 80px;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.title-black {
+  display: block;
+  font-style: italic;
+  letter-spacing: 8px;
+  margin-bottom: 10px;
+}
+
+.title-friday {
+  display: block;
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 90px;
+  letter-spacing: 4px;
+}
+
+.hero-subtitle {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 10px 0 20px 0;
+  background: linear-gradient(135deg, #001a4d, #003366);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 4px;
+}
+
+.discount-badge {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin: 20px 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.discount-text {
+  color: #333;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.discount-value {
+  color: #dc3545;
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.hero-description {
+  font-size: 20px;
+  line-height: 1.6;
+  margin: 20px 0;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.promo-code {
+  margin: 30px 0;
+}
+
+.promo-label {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 10px 0;
+}
+
+.promo-box {
+  background: white;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  max-width: 300px;
+  margin: 0 auto;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.code {
+  font-size: 24px;
+  font-weight: 900;
+  color: #dc3545;
+  letter-spacing: 2px;
+  flex: 1;
+}
+
+.copy-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: #c82333;
+  transform: scale(1.05);
+}
+
+.btn-shop-now,
+.btn-shop-now-2 {
+  background: linear-gradient(135deg, #001a4d, #003366);
+  color: white;
+  border: 3px solid white;
+  padding: 16px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.btn-shop-now:hover,
+.btn-shop-now-2:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Product Highlights */
+.product-highlights {
+  padding: 60px 20px;
+  background: white;
+  text-align: center;
+}
+
+.product-highlights h3 {
+  font-size: 40px;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.highlights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.highlight-card {
+  background: linear-gradient(135deg, #f9f9f9, #f0f0f0);
+  border-radius: 15px;
+  padding: 30px;
+  position: relative;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.highlight-card:hover {
+  transform: translateY(-10px);
+  border-color: #dc3545;
+  box-shadow: 0 15px 35px rgba(220, 53, 69, 0.2);
+}
+
+.highlight-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+}
+
+.highlight-card h4 {
+  color: #1a1a1a;
+  font-size: 22px;
+  margin: 15px 0 10px 0;
+}
+
+.highlight-card p {
+  color: #666;
+  line-height: 1.5;
+}
+
+.highlight-badge {
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 15px;
+  display: inline-block;
+}
+
+/* Benefits Section */
+.benefits-section {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f5f5f5, #ebebeb);
+  text-align: center;
+}
+
+.benefits-section h3 {
+  font-size: 40px;
+  color: #1a1a1a;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.benefit-card {
+  background: white;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.benefit-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.benefit-icon {
+  font-size: 40px;
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 15px;
+}
+
+.benefit-card h4 {
+  color: #1a1a1a;
+  font-size: 18px;
+  margin: 10px 0 8px 0;
+  font-weight: 600;
+}
+
+.benefit-card p {
+  color: #666;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* CTA Section */
+.cta-section {
+  background: linear-gradient(135deg, #dc3545, #ff6b6b);
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cta-section h3 {
+  font-size: 40px;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.cta-section p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.btn-shop-now-2 {
+  background: white;
+  color: #dc3545;
+}
+
+.btn-shop-now-2:hover {
+  background: #f0f0f0;
+  color: #c82333;
+}
+
+/* Footer */
+.footer {
+  background: #1a1a1a;
+  color: #999;
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 14px;
+}
+
+.footer p {
+  margin: 8px 0;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 60px;
+  }
+
+  .title-friday {
+    font-size: 70px;
+  }
+
+  .hero-subtitle {
+    font-size: 36px;
+  }
+
+  .discount-value {
+    font-size: 56px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto;
+    padding: 30px 15px;
+  }
+
+  .hero-title {
+    font-size: 48px;
+  }
+
+  .title-friday {
+    font-size: 56px;
+  }
+
+  .hero-subtitle {
+    font-size: 28px;
+  }
+
+  .discount-badge {
+    padding: 15px;
+  }
+
+  .discount-value {
+    font-size: 48px;
+  }
+
+  .hero-description {
+    font-size: 16px;
+  }
+
+  .btn-shop-now,
+  .btn-shop-now-2 {
+    padding: 12px 30px;
+    font-size: 16px;
+  }
+
+  .product-highlights h3,
+  .benefits-section h3,
+  .cta-section h3 {
+    font-size: 32px;
+  }
+
+  .highlights-grid,
+  .benefits-grid {
+    gap: 20px;
+  }
+
+  .product-highlights,
+  .benefits-section,
+  .cta-section {
+    padding: 40px 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 20px 10px;
+  }
+
+  .hero-title {
+    font-size: 36px;
+  }
+
+  .title-black {
+    letter-spacing: 4px;
+  }
+
+  .title-friday {
+    font-size: 44px;
+    letter-spacing: 2px;
+  }
+
+  .hero-subtitle {
+    font-size: 22px;
+  }
+
+  .discount-value {
+    font-size: 36px;
+  }
+
+  .hero-description {
+    font-size: 14px;
+  }
+
+  .promo-code {
+    margin: 20px 0;
+  }
+
+  .code {
+    font-size: 18px;
+  }
+
+  .btn-shop-now,
+  .btn-shop-now-2 {
+    padding: 10px 25px;
+    font-size: 14px;
+  }
+
+  .product-highlights h3,
+  .benefits-section h3,
+  .cta-section h3 {
+    font-size: 24px;
+  }
+
+  .product-highlights,
+  .benefits-section,
+  .cta-section {
+    padding: 30px 10px;
+  }
+
+  .highlights-grid,
+  .benefits-grid {
+    gap: 15px;
+    grid-template-columns: 1fr;
+  }
+
+  .highlight-card,
+  .benefit-card {
+    padding: 20px;
+  }
+
+  .highlight-icon {
+    font-size: 48px;
+  }
+}
